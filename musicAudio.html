@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="audio.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" integrity="sha512-PgQMlq+nqFLV4ylk1gwUOgm6CtIIXkKwaIHp/PAIWHzig/lKZSEGKEysh0TCVbHJXCLN7WetD8TFecIky75ZfQ==" crossorigin="anonymous" />
+</head>
+<body>
+   <div class="main_div">
+       <div class="music_container">
+           <h2 id="title">Nit</h2>
+           <h3 id="artist">hello</h3>
+           <div class="img_container">
+               <img src="">image of the song</img>
+           </div>
+           <audio src="music/Locked Away – Justin Bieber • Sam Smith • Beyoncé(MP3_160K).mp3" ></audio>
+            <!--progressbar -->
+            <div class="progressbar_container" id="progress_container">
+                <div class="progress_duration_meter">
+                    <div class="" id="current_time">0:00</div>
+                    <div class="" id="duration">     </div>
+ 
+ 
+                </div>
+                <div class="progress_div" id="progress_div">
+                    <div class="progress" id="progress">
+ 
+                    </div>
+                </div>
+            </div>
+           <!--controls -->
+           <div class="music_controls">
+              <i class="fas fa-backward" id='prev' title="Previous"></i>
+              <i class="fas fa-play main_button" id='play' title="Play"></i>
+              <i class="fas fa-forward" id='next' title="Next"></i>
+           </div>
+          
+       </div>
+   </div> 
+   <script>
+       const play=document.getElementById('play');
+       const img=document.querySelector('img');
+       const music=document.querySelector('audio');
+       const artist=document.getElementById('artist');
+       const title=document.getElementById('title');
+       const prev=document.getElementById('prev');
+       const next=document.getElementById('next');
+       let progress=document.getElementById('progress');
+       let dduration=document.getElementById('duration');
+
+       let current_time=document.getElementById('current_time');
+       let progress_div=document.getElementById('progress_div');
+       const songs=[{
+           name: 'Locked Away – Justin Bieber • Sam Smith • Beyoncé(MP3_160K)',
+           title:'Nit',
+           artist:'Hello'
+
+       },
+       {
+           name:'123',
+           title:'kya karega',
+           artist:'accha'
+       }];
+       songIndex=0;
+       const nextSong =() =>{
+            songIndex=(songIndex+1)%songs.length; 
+            loadSong(songs[songIndex]);
+            playMusic();
+            }
+
+       const prevSong =() =>{
+           
+            songIndex=(songIndex-1+songs.length)%songs.length;;
+            loadSong(songs[songIndex]);
+            playMusic();
+            
+
+       }
+
+       let isPlaying=false;
+       //for play function
+
+    
+       const playMusic=()=>{
+       isPlaying=true;
+       music.play();
+       play.classList.replace('fa-play','fa-pause')
+       // img.classList.add('anime')
+       console.log('j')
+       
+       };
+       
+       //for pause function
+
+
+       const pauseMusic=()=>{
+         isPlaying=false;
+         music.pause();
+       
+         play.classList.replace('fa-pause','fa-play')
+        // img.classList.add('anime')
+       
+       };
+       
+       play.addEventListener('click',()=>{
+           if(isPlaying){
+               pauseMusic();
+           }else{
+               playMusic();
+           }
+       });
+
+       //change the music data
+
+       const loadSong=(songs)=>{
+           title.textContent=songs.title;
+           artist.textContent=songs.artist;
+           music.src='music/'+songs.name+".mp3";
+           //img.src="images/"+songs.name+'.jpg'
+       }
+       //progress js work
+       music.addEventListener('timeupdate',(event)=>{
+           const {currentTime,duration}=event.srcElement;
+           let progress_time=(currentTime/duration)*100;
+            progress.style.width=`${progress_time}%`;  //styling m change krne k liye shi h ye toh 
+            //music duration update
+            let min_duration=Math.floor(duration/60);
+            let sec_duration=Math.floor(duration%60);
+            if(sec_duration<10){
+                sec_duration='0'+sec_duration;
+            }
+            let minute =Math.floor(currentTime/60);
+            let second=Math.floor(currentTime%60);
+            if(second<10){
+                second='0'+second
+            }
+            
+            
+            let tot_duration=`${min_duration}:${sec_duration}`;
+
+            dduration.textContent=`${tot_duration}`;
+            current_time.textContent=`${minute}:${second}`;
+             
+
+
+       })
+
+       next.addEventListener('click',nextSong);
+       prev.addEventListener('click',prevSong);
+       progress_div.addEventListener('click',(event)=>{
+           const {duration}=music;
+           let move_progress=(event.offsetX/event.srcElement.clientWidth)*duration;
+           music.currentTime=move_progress;
+       });
+       music.addEventListener('ended',nextSong)
+
+    
+
+   </script>
+</body>
+</html>
